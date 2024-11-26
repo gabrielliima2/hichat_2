@@ -2,29 +2,30 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ServicoAutenticacao {
-  //instancia de autenticar
+  // Instância de autenticação
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  //pegar usuario atual
+  // Pegar usuário atual
   User? pegarUsuarioAtual() {
     return _auth.currentUser;
   }
 
-  //entrar
+  // Entrar
   Future<UserCredential> entrarComEmailSenha(String email, senha) async {
     try {
-      //faz login do usuario
+      // Faz login do usuário
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: senha,
       );
 
-      //salva as informaçoes do usuario, se ele ainda nao existe
+      // Salva as informações do usuário, se ele ainda não existe
       _firestore.collection("Users").doc(userCredential.user!.uid).set(
         {
           'uid': userCredential.user!.uid,
           'email': email,
+
         },
       );
 
@@ -34,23 +35,22 @@ class ServicoAutenticacao {
     }
   }
 
-  //cadastrar
-  Future<UserCredential> cadastrarComEmailSenha(String email, senha) async {
+// Cadastrar
+  Future<UserCredential> cadastrarComEmailSenha(String nome, String email, String senha) async {
     try {
-      //cria o usuario
+      // Cria o usuário com email e senha
       UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
+      await _auth.createUserWithEmailAndPassword(
         email: email,
         password: senha,
       );
 
-      //salva as informaçoes do usuario em um documento separado
-      _firestore.collection("Users").doc(userCredential.user!.uid).set(
-        {
-          'uid': userCredential.user!.uid,
-          'email': email,
-        },
-      );
+      // Armazena o nome do usuário no Firestore
+      await _firestore.collection("Users").doc(userCredential.user!.uid).set({
+        'uid': userCredential.user!.uid,
+        'nome': nome,  // Armazena o nome do usuário
+        'email': email,
+      });
 
       return userCredential;
     } on FirebaseAuthException catch (e) {
@@ -58,10 +58,12 @@ class ServicoAutenticacao {
     }
   }
 
-  //sair
+
+
+  // Sair
   Future<void> signOut() async {
     return await _auth.signOut();
   }
 
-  //erros
+// Erros
 }
