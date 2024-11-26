@@ -49,7 +49,7 @@ class TelaLogin extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text("TÓRA",  style: TextStyle(
+            const Text("HICHAT",  style: TextStyle(
               fontSize: 30.0,
               color: Color.fromARGB(255, 147, 147, 147)     
               )
