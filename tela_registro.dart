@@ -4,11 +4,11 @@ import '../componentes/meu_textfield.dart';
 import '../servicos/autenticacao/servico_autenticacao.dart';
 
 class TelaRegistro extends StatelessWidget {
-  //controlador do texto do email e senha
+  //controlador do texto do email, senha e nome
+  final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _senhaController = TextEditingController();
-  final TextEditingController _confirmarSenhaController =
-      TextEditingController();
+  final TextEditingController _confirmarSenhaController = TextEditingController();
 
   //clique para ir para a tela de login
   final void Function()? onTap;
@@ -18,15 +18,16 @@ class TelaRegistro extends StatelessWidget {
     required this.onTap,
   });
 
-  //Método de cadastro
+// Método de cadastro
   void cadastro(BuildContext context) {
-    //get servico de autenticacao
+    // Serviço de autenticação
     final _autenticacao = ServicoAutenticacao();
 
-    // se a senha for igual, criar a conta.
+    // Se a senha for igual, criar a conta
     if (_senhaController.text == _confirmarSenhaController.text) {
       try {
         _autenticacao.cadastrarComEmailSenha(
+          _nomeController.text, // Passando o nome corretamente
           _emailController.text,
           _senhaController.text,
         );
@@ -38,9 +39,8 @@ class TelaRegistro extends StatelessWidget {
           ),
         );
       }
-    }
-    // se a senha NÃO for igual, mostrar o erro de senha incorreta
-    else {
+    } else {
+      // Se as senhas não forem iguais, mostrar erro
       showDialog(
         context: context,
         builder: (context) => const AlertDialog(
@@ -50,6 +50,8 @@ class TelaRegistro extends StatelessWidget {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +60,7 @@ class TelaRegistro extends StatelessWidget {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text("TÓRA",  style: TextStyle(
+          const Text("HICHAT",  style: TextStyle(
               fontSize: 30.0,
               color: Color.fromARGB(255, 147, 147, 147),
               )
@@ -75,8 +77,17 @@ class TelaRegistro extends StatelessWidget {
               fontSize: 16,
             ),
           ),
-
           const SizedBox(height: 25),
+
+          //Campo de texto do nome
+
+          MeuCampoDeTexto(
+            hintText: 'Nome',
+            obscureText: false,
+            controller: _nomeController,
+          ),
+
+          const SizedBox(height: 10),
 
           //Campo de texto do email
 
